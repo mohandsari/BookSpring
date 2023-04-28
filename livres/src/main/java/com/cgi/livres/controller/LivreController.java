@@ -9,7 +9,6 @@ import com.cgi.livres.entity.LivreEntity;
 import com.cgi.livres.service.LivreService;
 
 @RestController
-@CrossOrigin(origins= {"*"}, maxAge = 4800, allowCredentials = "false",methods = {RequestMethod.DELETE,RequestMethod.GET,RequestMethod.PUT,RequestMethod.POST})
 @RequestMapping("/livre")
 public class LivreController {
 	private final LivreService livreService;

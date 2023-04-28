@@ -54,10 +54,7 @@
 </template>
 
 <script>
-import Vue from 'vue'
 import axios from 'axios'
-
-Vue.use(axios)
 
 export default {
   name: 'livreCrud',
@@ -83,7 +80,7 @@ export default {
 
   methods: {
     livreLoad () {
-      var page = 'http://localhost:8080/livre'
+      var page = 'http://localhost:8083/livre'
       axios.get(page)
         .then(
           ({data}) => {
@@ -101,7 +98,7 @@ export default {
       }
     },
     saveData () {
-      axios.post('http://localhost:8080/livre', this.livre)
+      axios.post('http://localhost:8083/livre', this.livre)
         .then(
           ({data}) => {
             alert('saveddddd')
@@ -117,7 +114,7 @@ export default {
       this.livre = livre
     },
     updateData () {
-      var editrecords = 'http://localhost:8080/livre'
+      var editrecords = 'http://localhost:8083/livre'
       axios.put(editrecords, this.livre)
         .then(
           ({data}) => {
@@ -132,7 +129,7 @@ export default {
     },
 
     remove (livre) {
-      var url = `http://localhost:8080/livre/delete/${livre.id}`
+      var url = `http://localhost:8083/livre/delete/${livre.id}`
       axios.delete(url)
       alert('Deleteddd')
       this.livreLoad()
