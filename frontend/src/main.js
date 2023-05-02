@@ -17,7 +17,16 @@ let initOptions = {
 
 let keycloak = new Keycloak(initOptions)
 
-keycloak.init({onLoad: initOptions.onLoad}).then(() => {
+keycloak.init({onLoad: initOptions.onLoad}).then(authenticated => {
+  if (authenticated) {
+    console.log('ok')
+    const token = keycloak.token
+    let d = new Date()
+    d.setTime(d.getTime() + 122 * 60 * 1000)
+    let expires = 'expires=' + d.toUTCString()
+    document.cookie =
+      'Token=' + token + ';' + expires + ';path=/'
+  }
   new Vue({
     el: '#app',
     router,
