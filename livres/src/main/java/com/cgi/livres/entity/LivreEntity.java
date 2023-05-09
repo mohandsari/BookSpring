@@ -22,7 +22,11 @@ public class LivreEntity {
 	private Long editeur_id;
 	@Column(name = "nom")
 	private String nom;
-	
+
+	public String getString(){
+		return "nom : "+this.nom+","+" auteur_id : "+this.auteur_id+","+" editeur_id : "+this.editeur_id;
+	}
+
 	public Long getId() {
 		return id;
 	}
@@ -57,7 +61,7 @@ public class LivreEntity {
 
 	public LivreEntity() {
 	}
-	
+
 	public LivreEntity(Long id, Long auteur_id, Long editeur_id, String nom) {
 		this.id=id;
 		this.auteur_id=auteur_id;
