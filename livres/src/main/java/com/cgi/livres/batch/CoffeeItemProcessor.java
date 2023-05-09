@@ -11,14 +11,16 @@ public class CoffeeItemProcessor implements ItemProcessor<Coffee, Coffee> {
 
     @Override
     public Coffee process(final Coffee coffee) throws Exception {
+        int coffe_id = coffee.getCoffee_id();
         String brand = coffee.getBrand().toUpperCase();
         String origin = coffee.getOrigin().toUpperCase();
         String chracteristics = coffee.getCharacteristics().toUpperCase();
 
-        Coffee transformedCoffee = new Coffee(brand, origin, chracteristics);
+        Coffee transformedCoffee = new Coffee(coffe_id, brand, origin, chracteristics);
         LOGGER.info("Converting ( {} ) into ( {} )", coffee, transformedCoffee);
 
         return transformedCoffee;
+
     }
 
 }

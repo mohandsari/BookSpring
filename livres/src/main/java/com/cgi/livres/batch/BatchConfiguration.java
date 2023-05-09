@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.transaction.PlatformTransactionManager;
 
 import javax.sql.DataSource;
@@ -33,7 +34,7 @@ public class BatchConfiguration {
         return new FlatFileItemReaderBuilder().name("coffeeItemReader")
                 .resource(new ClassPathResource(fileInput))
                 .delimited()
-                .names(new String[] { "brand", "origin", "characteristics" })
+                .names(new String[] { "coffee_id","brand", "origin", "characteristics" })
                 .fieldSetMapper(new BeanWrapperFieldSetMapper() {{
                     setTargetType(Coffee.class);
                 }})
@@ -42,13 +43,13 @@ public class BatchConfiguration {
 
     @Bean
     public JdbcBatchItemWriter writer(DataSource dataSource) {
-        System.out.println("writer");
         return new JdbcBatchItemWriterBuilder()
                 .itemSqlParameterSourceProvider(new BeanPropertyItemSqlParameterSourceProvider<>())
-                .sql("INSERT INTO coffee (brand, origin, characteristics) VALUES (:brand, :origin, :characteristics)")
+                .sql("INSERT INTO coffee (coffee_id, brand, origin, characteristics) VALUES (:coffee_id, :brand, :origin, :characteristics) ON CONFLICT (brand, origin) DO UPDATE SET characteristics = :characteristics")
                 .dataSource(dataSource)
                 .build();
     }
+
 
     @Bean
     public Job importUserJob(JobRepository jobRepository, JobCompletionNotificationListener listener, Step step1) {
