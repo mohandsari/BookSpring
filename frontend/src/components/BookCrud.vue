@@ -48,12 +48,14 @@
 
       </tbody>
     </table>
+    <button type="button" class="btn btn-danger"  @click="logoutSession()">Deconnexion</button>
 
   </div>
 
 </template>
 
 <script>
+
 import axios from 'axios'
 
 export default {
@@ -61,21 +63,16 @@ export default {
   data () {
     return {
       result: {},
-
       livre: {
         livre_id: '',
         nom: '',
         auteur_id: '',
         editeur_id: ''
-
       }
     }
   },
   created () {
     this.livreLoad()
-  },
-  mounted () {
-    console.log('mounted() called.......')
   },
 
   methods: {
@@ -84,7 +81,6 @@ export default {
       axios.get(page)
         .then(
           ({data}) => {
-            console.log(data)
             this.result = data
           }
         )
@@ -133,6 +129,15 @@ export default {
       axios.delete(url)
       alert('Deleteddd')
       this.livreLoad()
+    },
+    logoutSession () {
+      this.$keycloak.logout({
+        redirectUri: 'http://localhost:8082/'
+      }).then((success) => {
+        console.log('deconnecter')
+      }).catch((error) => {
+        console.log(error)
+      })
     }
   }
 }

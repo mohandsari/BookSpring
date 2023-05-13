@@ -1,6 +1,7 @@
 package com.cgi.livres.batch;
 
 import com.cgi.livres.entity.Coffee;
+import com.cgi.livres.entity.LivreEntity;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.job.builder.JobBuilder;
@@ -28,9 +29,8 @@ public class BatchConfiguration {
     @Value("${file.input}")
     private String fileInput;
 
-    // ...
     @Bean
-    public FlatFileItemReader reader() {
+    public FlatFileItemReader readerCoffee() {
         return new FlatFileItemReaderBuilder().name("coffeeItemReader")
                 .resource(new ClassPathResource(fileInput))
                 .delimited()
@@ -42,7 +42,7 @@ public class BatchConfiguration {
     }
 
     @Bean
-    public JdbcBatchItemWriter writer(DataSource dataSource) {
+    public JdbcBatchItemWriter writerCoffee(DataSource dataSource) {
         return new JdbcBatchItemWriterBuilder()
                 .itemSqlParameterSourceProvider(new BeanPropertyItemSqlParameterSourceProvider<>())
                 .sql("INSERT INTO coffee (coffee_id, brand, origin, characteristics) VALUES (:coffee_id, :brand, :origin, :characteristics) ON CONFLICT (brand, origin) DO UPDATE SET characteristics = :characteristics")
@@ -62,12 +62,12 @@ public class BatchConfiguration {
     }
 
     @Bean
-    public Step step1(JobRepository jobRepository, PlatformTransactionManager transactionManager, JdbcBatchItemWriter writer) {
+    public Step step1(JobRepository jobRepository, PlatformTransactionManager transactionManager, JdbcBatchItemWriter writerCoffee) {
         return new StepBuilder("step1", jobRepository)
                 .<Coffee, Coffee> chunk(10, transactionManager)
-                .reader(reader())
+                .reader(readerCoffee())
                 .processor(processor())
-                .writer(writer)
+                .writer(writerCoffee)
                 .build();
     }
 
@@ -75,5 +75,4 @@ public class BatchConfiguration {
     public CoffeeItemProcessor processor() {
         return new CoffeeItemProcessor();
     }
-
 }
